@@ -7,3 +7,9 @@ TODO:
 - [ ] Loop through the tracks and search on pleer for it
 - [ ] Download all the tracks one by one
 - [ ] Run beets on the downloaded tracks to format then immediately
+
+
+Build:
+``
+pip install -r requirements.txt 
+``
