@@ -1,3 +1,4 @@
 args==0.1.0
 musicbrainzngs
 requests==2.4.3
+clint

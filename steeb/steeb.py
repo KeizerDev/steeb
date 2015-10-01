@@ -1,7 +1,7 @@
-#! /usr/bin/env python
+#!/usr/bin/env python
 
-import demjson, requests, sys, os, argparse
-from clint.textui import colored, puts, progress
+import requests, sys, os, argparse, musicbrainzngs
+from clint.textui import colored, puts, progress, indent
 from mutagen.mp3 import EasyMP3
 
 def get_album_metadata( url ):
@@ -43,16 +43,36 @@ def download_tracks( album_data ):
         download_file( track["file"]["mp3-128"] , path)
         tag_file( path , artist , track["title"])
 
+
+def get_albums( artist_id ):
+    result = musicbrainzngs.get_artist_by_id(artist_id, includes=["release-groups"], release_type=["album", "ep"])
+    
+    for idx, album in enumerate(result["artist"]["release-group-list"]):
+        with indent(4, quote=''):
+            puts("[{0}]. {1}".format(colored.yellow((idx + 1)), album["title"]))
+            # puts("%s" % (idx + 1))
+            # puts("%s" % album["title"])
+
+
+def search_artist( search_query ):
+    result = musicbrainzngs.search_artists(artist=search_query)
+    print("steeb found %s artists" % colored.cyan(len(result["artist-list"])))
+    for idx, artist in enumerate(result["artist-list"]):
+        with indent(4, quote=''):
+            puts("[{0}]. {1}".format(colored.yellow((idx + 1)), artist["name"]))
+            # get_albums(artist["id"])
+
+
 def main():
-    parser = argparse.ArgumentParser(description='BcampScrape. Scrape and download an artist album from BandCamp.\n')
-    parser.add_argument('album_url', metavar='U', type=str,help="A BandCamp band album url")
-    args = parser.parse_args()
-    vargs = vars(args)
+    musicbrainzngs.set_useragent("steeb", "0.1", "KeizerDev@github.com")
+
+    parser = argparse.ArgumentParser(description="Steeb. A reverse way of beets by downloading music from pleer.com\n")
+    parser.add_argument("artist_query", metavar="artist", type=str, help="Artist search query")
+
+    vargs = vars(parser.parse_args())
     if not any(vargs.values()):
         parser.error("Please supply a band albums url.")
-    album_data = get_album_metadata( vargs["album_url"] )
-    download_tracks( album_data )
-
+    search_artist( vargs["artist_query"] )
 
 if __name__ == '__main__':
     try:
