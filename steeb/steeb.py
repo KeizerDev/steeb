@@ -60,7 +60,7 @@ def search_artist( search_query ):
     for idx, artist in enumerate(result["artist-list"]):
         with indent(4, quote=''):
             puts("[{0}]. {1}".format(colored.yellow((idx + 1)), artist["name"]))
-            # get_albums(artist["id"])
+            get_albums(artist["id"])
 
 
 def main():
