@@ -11,6 +11,9 @@ from clint.textui import colored, puts, progress, indent
 from mutagen.mp3 import EasyMP3
 
 
+
+musicbrainzngs.set_useragent("steeb", "0.1", "KeizerDev@github.com")
+
 # --- here goes your event handlers ---
 def get_albums( artist_id ):
     result = musicbrainzngs.get_artist_by_id(artist_id, includes=["release-groups"], release_type=["album", "ep"])
@@ -29,13 +32,16 @@ def search_artist(evt):
         with indent(4, quote=''):
             puts("[{0}]. {1}".format(colored.yellow((idx + 1)), artist["name"]))
             # mywin['resultslist'].items[idx] = {'col_a': '00', 'col_b': 'inserted!'}
-            mywin['resultslist'].items.add("Child 1")
+            mywin['resultslist'].items.add(text="Root")
             # get_albums(artist["id"])
 
+def load(evt):
+    
+     # load the list items with sample data:
+    lv = mywin['resultslist'].items("lol")
 
 
-
-# --- gui2py designer generated code starts ---
+# Layout styles
 win_height = '500px'
 win_width = '400px'
 input_width = '320px'
@@ -47,18 +53,16 @@ lv_height = '455px'
 with gui.Window(name='mywin', title=u'Steeb', height=win_height, width=win_width, left='323', top='137', bgcolor=u'#F0F0F0', fgcolor=u'#555555', image='', ):
     gui.TextBox(name='searchfield', height=form_height, left='5', top='0', width=input_width, )
     gui.Button(label=u'Search!', name='button', height='35px', width=btn_width, left='333px', top='5', default=True, fgcolor=u'#F9F9F9', )
-    gui.ListView(name='resultslist', height=lv_height, left='0', top=form_height, width=win_width, sort_column=-1, onitemselected="print ('sel %s' % event.target.get_selected_items())", )
+    gui.ListView(name='resultslist', height=lv_height, left='0', top=form_height, width=win_width, onitemselected="print ('sel %s' % event.target.get_selected_items())", )
         # gui.ListColumn(name='col_a', text='Col A', )
         # gui.ListColumn(name='col_b', text='Col B', ))
-
-# --- gui2py designer generated code ends ---
+   
 mywin = gui.get("mywin")
-musicbrainzngs.set_useragent("steeb", "0.1", "KeizerDev@github.com")
 
 # assign your event handlers:
-
+mywin.onload = load
 mywin['button'].onclick = search_artist
-# mywin['resultslist'].items(['hallo', 'hallo', 'hallo','hallo' ])
+
 
 if __name__ == "__main__":
     mywin.show()    

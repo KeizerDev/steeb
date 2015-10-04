@@ -13,3 +13,4 @@ Build:
 ``
 pip install -r requirements.txt 
 ``
+and install `wxPython`
