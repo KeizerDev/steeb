@@ -27,19 +27,19 @@ def get_albums( artist_id ):
 
 def search_artist(evt):
     result = musicbrainzngs.search_artists(artist=mywin['searchfield'].value)
+    resultList = []
     print("steeb found %s artists" % colored.cyan(len(result["artist-list"])))
     for idx, artist in enumerate(result["artist-list"]):
         with indent(4, quote=''):
-            puts("[{0}]. {1}".format(colored.yellow((idx + 1)), artist["name"]))
-            # mywin['resultslist'].items[idx] = {'col_a': '00', 'col_b': 'inserted!'}
-            mywin['resultslist'].items.add(text="Root")
+            resultList.append(artist["name"])
+            # lv.items = 
             # get_albums(artist["id"])
+    lv = mywin['resultslist']
+    lv.items = resultList
+
 
 def load(evt):
-    
-     # load the list items with sample data:
-    lv = mywin['resultslist'].items("lol")
-
+    lv = mywin['resultslist']
 
 # Layout styles
 win_height = '500px'
@@ -53,13 +53,13 @@ lv_height = '455px'
 with gui.Window(name='mywin', title=u'Steeb', height=win_height, width=win_width, left='323', top='137', bgcolor=u'#F0F0F0', fgcolor=u'#555555', image='', ):
     gui.TextBox(name='searchfield', height=form_height, left='5', top='0', width=input_width, )
     gui.Button(label=u'Search!', name='button', height='35px', width=btn_width, left='333px', top='5', default=True, fgcolor=u'#F9F9F9', )
-    gui.ListView(name='resultslist', height=lv_height, left='0', top=form_height, width=win_width, onitemselected="print ('sel %s' % event.target.get_selected_items())", )
-        # gui.ListColumn(name='col_a', text='Col A', )
-        # gui.ListColumn(name='col_b', text='Col B', ))
+    with gui.ListView(name='resultslist', height=lv_height, left='0', top=form_height, width=win_width, item_count=10, sort_column=0, onitemselected="print ('sel %s' % event.target.get_selected_items())", ):
+        gui.ListColumn(name='artist', text='Artist', width=400)
+
+
    
 mywin = gui.get("mywin")
 
-# assign your event handlers:
 mywin.onload = load
 mywin['button'].onclick = search_artist
 
