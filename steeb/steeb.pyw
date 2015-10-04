@@ -51,8 +51,8 @@ form_height = '45px'
 lv_height = '455px'
 
 with gui.Window(name='mywin', title=u'Steeb', height=win_height, width=win_width, left='323', top='137', bgcolor=u'#F0F0F0', fgcolor=u'#555555', image='', ):
-    gui.TextBox(name='searchfield', height=form_height, left='5', top='0', width=input_width, )
-    gui.Button(label=u'Search!', name='button', height='35px', width=btn_width, left='333px', top='5', default=True, fgcolor=u'#F9F9F9', )
+    gui.TextBox(name='searchfield', height=form_height, left='5', top='0', width=input_width, parent='mywin', )
+    gui.Button(label=u'Search!', name='button', height='35px', width=btn_width, left='333px', top='5', default=True, fgcolor=u'#F9F9F9', parent='mywin', )
     with gui.ListView(name='resultslist', height=lv_height, left='0', top=form_height, width=win_width, item_count=10, sort_column=0, onitemselected="print ('sel %s' % event.target.get_selected_items())", ):
         gui.ListColumn(name='artist', text='Artist', width=400)
 
