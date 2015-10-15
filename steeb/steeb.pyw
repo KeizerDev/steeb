@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# -*- coding: utf8 -*-
 
 from __future__ import with_statement   # for python 2.5 compatibility
 
@@ -12,10 +13,29 @@ from clint.textui import colored, puts, progress, indent
 from mutagen.mp3 import EasyMP3
 
 
-
-m.set_useragent("steeb", "0.1", "KeizerDev@github.com")
-
 # --- here goes your event handlers ---
+def search_artist(evt):
+    result = m.search_artists(artist=mainwin['searchfield'].value)
+    resultList = []
+    print("steeb found %s artists" % colored.cyan(len(result["artist-list"])))
+    for idx, artist in enumerate(result["artist-list"]):
+        resultList.append([artist["name"], artist["id"]])
+
+    lv = mainwin['artistslist']
+    lv.items = resultList
+
+
+def get_albums(evt):
+    result = m.get_artist_by_id(evt.target.get_selected_items()[0]['id'], includes=["release-groups"], release_type=["album", "ep"])
+    resultList = []
+    print(result)
+    for idx, album in enumerate(result["artist"]["release-group-list"]):
+        resultList.append([album["title"], album["id"]])
+
+    lv = mainwin['albumslist']
+    lv.items = resultList
+
+
 def get_tracks(evt):
     albumslist = m.get_release_group_by_id(evt.target.get_selected_items()[0]['id'], includes="releases")
     resultList = [] 
@@ -27,41 +47,56 @@ def get_tracks(evt):
     print("=========================")
     print(albumslist['release-group']['release-list'][-1]['id'])
     tracks = m.get_release_by_id(albumslist['release-group']['release-list'][0]['id'], includes=["artists", "recordings"])
-    print(tracks)
+    
+    album_id = tracks["release"]["id"]
     for idx, track in enumerate(tracks["release"]["medium-list"][0]["track-list"]):
-        resultList.append([track["recording"]["title"], track["id"]])
+        resultList.append([track["recording"]["title"], album_id])
 
-    lv = mywin['trackslist']
+    lv = mainwin['trackslist']
     lv.items = resultList
+    
+
+def clickevt_album(evt):
+    window_name = mainwin['artistslist'].get_selected_items()[0]["artist"] + " - " + mainwin['albumslist'].get_selected_items()[0]["albums"];
+
+    with gui.Window(name='downwin', title=u'' + window_name, height=down_win_height, width=down_win_width, left='323', top='137', bgcolor=u'#F0F0F0', fgcolor=u'#555555', ):
+        with gui.ListView(name='downloadlist', height=down_win_height, width=down_win_width, left='0', top='0', item_count=10, sort_column=0, onitemselected="print ('sel %s' % event.target.get_selected_items())", ):
+            gui.ListColumn(name='tracks', text='Tracks', width=350)
+            gui.ListColumn(name='tracksfound', text='Tracks founded ', width=150)
+
+    downwin = gui.get("downwin")
+
+    tracksList = [] 
+    tracks = m.get_release_by_id(mainwin["trackslist"].get_selected_items()[0]["id"], includes=["artists", "recordings"])
+    for idx, track in enumerate(tracks["release"]["medium-list"][0]["track-list"]):
+        print(idx)
+        if (idx == 2):
+            tracksList.append([track["recording"]["title"], "×"])
+        else: 
+            tracksList.append([track["recording"]["title"], "✓"])
+
+    lv = downwin["downloadlist"]
+    lv.items = tracksList
+        # gui.Gauge(name='gauge', height='18', left='13', top='130', width='50', value=50, )
 
 
-
-def get_albums(evt):
-    result = m.get_artist_by_id(evt.target.get_selected_items()[0]['id'], includes=["release-groups"], release_type=["album", "ep"])
-    resultList = []
-    print(result)
-    for idx, album in enumerate(result["artist"]["release-group-list"]):
-        resultList.append([album["title"], album["id"]])
-    lv = mywin['albumslist']
-    lv.items = resultList
-
-def search_artist(evt):
-    result = m.search_artists(artist=mywin['searchfield'].value)
-    resultList = []
-    print("steeb found %s artists" % colored.cyan(len(result["artist-list"])))
-    for idx, artist in enumerate(result["artist-list"]):
-        resultList.append([artist["name"], artist["id"]])
-
-    lv = mywin['artistslist']
-    lv.items = resultList
+def pleer_query(evt):
+    print("queeerrrrrrrrrrrrrieee")
 
 
 def load(evt):
-    lv = mywin['artistslist']
+    m.set_useragent("steeb", "0.1", "KeizerDev@github.com")
+    mainwin['button_search'].onclick = search_artist
+    mainwin['artistslist'].onitemselected = get_albums
+    mainwin['albumslist'].onitemselected = get_tracks
+    mainwin['button_down'].onclick = clickevt_album
+    lv = mainwin['artistslist']
 
 # Layout styles
-win_height = '500px'
-win_width = '600px'
+main_win_height = '500px'
+main_win_width = '600px'
+down_win_height = '400px'
+down_win_width = '500px'
 
 search_width = '400px'
 songs_width = '200px'
@@ -76,10 +111,10 @@ lv_songs_height = '455px'
 lv_artist_top = '280px'
 
 
-with gui.Window(name='mywin', title=u'Steeb', height=win_height, width=win_width, left='323', top='137', bgcolor=u'#F0F0F0', fgcolor=u'#555555', image='', ):
-    gui.TextBox(name='searchfield', height=form_height, left='5', top='0', width=input_width, parent='mywin', )
-    gui.Button(label=u'Download!', name='button', height='35px', width=btn_download_width, left=search_width, top='5', default=True, fgcolor=u'#F9F9F9', parent='mywin', )
-    gui.Button(label=u'Search!', name='button', height='35px', width=btn_width, left='333px', top='5', default=True, fgcolor=u'#F9F9F9', parent='mywin', )
+with gui.Window(name='mainwin', title=u'Steeb', height=main_win_height, width=main_win_width, left='323', top='137', bgcolor=u'#F0F0F0', fgcolor=u'#555555', image='', ):
+    gui.TextBox(name='searchfield', height=form_height, left='5', top='0', width=input_width, parent='mainwin', )
+    gui.Button(label=u'Download!', name='button_down', height='35px', width=btn_download_width, left=search_width, top='5', default=True, fgcolor=u'#EEEEEE', bgcolor=u'#C0392B', parent='mainwin', )
+    gui.Button(label=u'Search!', name='button_search', height='35px', width=btn_width, left='333px', top='5', default=True, fgcolor=u'#EEEEEE', bgcolor=u'#C0392B', parent='mainwin', )
     with gui.ListView(name='artistslist', height=lv_artist_height, left='0', top=form_height, width=search_width, item_count=10, sort_column=0, onitemselected="print ('sel %s' % event.target.get_selected_items())", ):
         gui.ListColumn(name='artist', text='Artist', width=400)
         gui.ListColumn(name='id', text='Id', width=0)
@@ -88,16 +123,15 @@ with gui.Window(name='mywin', title=u'Steeb', height=win_height, width=win_width
         gui.ListColumn(name='id', text='Id', width=0)
     with gui.ListView(name='trackslist', height=lv_songs_height, left=search_width, top=form_height, width=songs_width, item_count=10, sort_column=0, onitemselected="print ('sel %s' % event.target.get_selected_items())", ):
         gui.ListColumn(name='songs', text='Songs', width=200)
-        gui.ListColumn(name='id', text='Id', width=0)
+        gui.ListColumn(name='id', text='Id', width=0, ) 
+        # gui.Gauge(name='gauge', height='18', left='13', top='130', width='50', value=50, )
+
 
    
-mywin = gui.get("mywin")
+mainwin = gui.get("mainwin")
 
-mywin.onload = load
-mywin['button'].onclick = search_artist
-mywin['artistslist'].onitemselected = get_albums
-mywin['albumslist'].onitemselected = get_tracks
+mainwin.onload = load
 
 if __name__ == "__main__":
-    mywin.show()    
+    mainwin.show()    
     gui.main_loop()
