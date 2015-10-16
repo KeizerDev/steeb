@@ -61,19 +61,23 @@ def clickevt_album(evt):
 
     with gui.Window(name='downwin', title=u'' + window_name, height=down_win_height, width=down_win_width, left='323', top='137', bgcolor=u'#F0F0F0', fgcolor=u'#555555', ):
         with gui.ListView(name='downloadlist', height=down_win_height, width=down_win_width, left='0', top='0', item_count=10, sort_column=0, onitemselected="print ('sel %s' % event.target.get_selected_items())", ):
-            gui.ListColumn(name='tracks', text='Tracks', width=350)
+            gui.ListColumn(name='trackposition', text='Nr.', width=50)
+            gui.ListColumn(name='tracks', text='Tracks', width=300)
             gui.ListColumn(name='tracksfound', text='Tracks founded ', width=150)
 
     downwin = gui.get("downwin")
 
     tracksList = [] 
     tracks = m.get_release_by_id(mainwin["trackslist"].get_selected_items()[0]["id"], includes=["artists", "recordings"])
+    print(tracks)
     for idx, track in enumerate(tracks["release"]["medium-list"][0]["track-list"]):
         print(idx)
-        if (idx == 2):
-            tracksList.append([track["recording"]["title"], "×"])
-        else: 
-            tracksList.append([track["recording"]["title"], "✓"])
+        tracksList.append(pleer_query(track))
+        
+        # if (idx == 2):
+            # tracksList.append([track["number"], track["recording"]["title"], "×"])
+        # else: 
+            # tracksList.append([track["number"], track["recording"]["title"], "✓"])
 
     lv = downwin["downloadlist"]
     lv.items = tracksList
@@ -81,7 +85,7 @@ def clickevt_album(evt):
 
 
 def pleer_query(evt):
-    print("queeerrrrrrrrrrrrrieee")
+    pass ([track["number"], track["recording"]["title"], "✓"])
 
 
 def load(evt):
