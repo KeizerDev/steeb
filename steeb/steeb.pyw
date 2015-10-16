@@ -84,8 +84,10 @@ def clickevt_album(evt):
         # gui.Gauge(name='gauge', height='18', left='13', top='130', width='50', value=50, )
 
 
-def pleer_query(evt):
-    pass ([track["number"], track["recording"]["title"], "✓"])
+def pleer_query(track):
+    if :
+        pass
+    return [track["number"], track["recording"]["title"], "✓"]
 
 
 def load(evt):
