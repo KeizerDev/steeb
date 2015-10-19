@@ -3,8 +3,8 @@
 
 from __future__ import with_statement   # for python 2.5 compatibility
 
-__author__ = "Robert-Jan Keizer (robertjankeizer@gmail.com)"
-__copyright__ = "Copyright (C) 2013- Robert-Jan Keizer"
+__author__ = "KeizerDev (robertjankeizer@gmail.com)"
+__copyright__ = "Copyright (C) 2015- KeizerDev"
 __license__ = "LGPL 3.0"
 
 import gui, requests, sys, os, argparse, time
@@ -75,9 +75,9 @@ def clickevt_album(evt):
         tracksList.append(pleer_query(track))
         
         # if (idx == 2):
-            # tracksList.append([track["number"], track["recording"]["title"], "×"])
+            # tracksList.append([track["number"], track["recording"]["title"], "×".decode('utf-8')])
         # else: 
-            # tracksList.append([track["number"], track["recording"]["title"], "✓"])
+            # tracksList.append([track["number"], track["recording"]["title"], "✓".decode('utf-8')])
 
     lv = downwin["downloadlist"]
     lv.items = tracksList
@@ -85,9 +85,11 @@ def clickevt_album(evt):
 
 
 def pleer_query(track):
-    if :
-        pass
-    return [track["number"], track["recording"]["title"], "✓"]
+    keywords = mainwin['artistslist'].get_selected_items()[0]["artist"] + " " + track["recording"]["title"]
+    pleer_qry = requests.get("http://pleer.com/browser-extension/search?q=" + keywords)
+
+    print(pleer_qry.json())
+    return [track["number"], track["recording"]["title"], "✓".decode('utf-8')]
 
 
 def load(evt):

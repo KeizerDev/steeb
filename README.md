@@ -7,10 +7,18 @@ TODO:
 - [ ] Loop through the tracks and search on pleer for it
 - [ ] Download all the tracks one by one
 - [ ] Run beets on the downloaded tracks to format then immediately
+- [ ] By pleer search make sure length match by song
+- [ ] Fix some bugs with wxpython
+- [ ] Make an exe for windows
+- [ ] Set download locations
+- [ ] Making a settings window
 
+Optional:
+- [ ] Migrate to TkInter
 
-Build:
-``
-pip install -r requirements.txt 
-``
-and install `wxPython`
+**Build:**
+Make sure you have `wxpython` installed and you're using `python2` and `python2-pip` OR python2.7
+
+```bash
+$ pip install -r requirements.txt 
+```
