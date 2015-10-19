@@ -87,8 +87,9 @@ def clickevt_album(evt):
 def pleer_query(track):
     keywords = mainwin['artistslist'].get_selected_items()[0]["artist"] + " " + track["recording"]["title"]
     pleer_qry = requests.get("http://pleer.com/browser-extension/search?q=" + keywords)
-
-    print(pleer_qry.json())
+    pleer_tracks = pleer_qry.json()['tracks']
+    # pleer_tracks[0]
+    print(pleer_tracks[0])
     return [track["number"], track["recording"]["title"], "✓".decode('utf-8')]
 
 
