@@ -8,6 +8,7 @@ __copyright__ = "Copyright (C) 2015- KeizerDev"
 __license__ = "LGPL 3.0"
 
 import gui, requests, sys, os, argparse, time
+import preference as pref
 import musicbrainzngs as m
 from clint.textui import colored, puts, progress, indent
 from mutagen.mp3 import EasyMP3
@@ -59,15 +60,18 @@ def clickevt_album(evt):
     window_name = mainwin['artistslist'].get_selected_items()[0]["artist"] + " - " + mainwin['albumslist'].get_selected_items()[0]["albums"];
 
     with gui.Window(name='downwin', title=u'' + window_name, height=down_win_height, width=down_win_width, left='323', top='137', bgcolor=u'#F0F0F0', fgcolor=u'#555555', ):
-        gui.TextBox(name='downloadpath', value= u'/home/robert-jan/Music/downloads', height=form_height, left='5', top='0', width=down_input_width, parent='downwin', )
-        gui.Button(label=u'Download all!', name='button_down', height='35px', width=down_btn_width, left=down_input_width, top='5', default=True, fgcolor=u'#EEEEEE', bgcolor=u'#C0392B', parent='downwin', )
+        gui.TextBox(name='downloadpath', value=pref.download_dir, height=form_height, left='5', top='0', width=down_input_width, parent='downwin', )
+        gui.Button(label=u'Download all!', name='btn_down_all', height='35px', width=down_btn_width, left=down_input_width, top='5', default=True, fgcolor=u'#EEEEEE', bgcolor=u'#C0392B', parent='downwin', )
         gui.Button(label=u'Download selected!', name='button_down', height='35px', width=down_btn_width, left=down_btn_left, top='5', default=True, fgcolor=u'#EEEEEE', bgcolor=u'#C0392B', parent='downwin', )
         with gui.ListView(name='downloadlist', height=down_lv_songs_height, width=down_win_width, left='0', top=form_height, item_count=10, sort_column=0, onitemselected="print ('sel %s' % event.target.get_selected_items())", ):
             gui.ListColumn(name='trackposition', text='Nr.', width=50)
             gui.ListColumn(name='tracks', text='Tracks', width=300)
-            gui.ListColumn(name='tracksfound', text='Tracks founded ', width=150)
+            gui.ListColumn(name='tracksfound', text='Tracks founded', width=150)
+            gui.ListColumn(name='id', text='', width=0)
+        gui.Gauge(name='loader', height=down_gauge_height, left=0, top=down_gauge_top, width=down_win_width, value=50, )
 
     downwin = gui.get("downwin")
+    downwin['btn_down_all'].onclick = download_all_songs
 
     tracksList = []
     (oldtracks_position, oldtracks_json) = mainwin["trackslist"].items()[0]
@@ -78,11 +82,8 @@ def clickevt_album(evt):
         print(idx)
         tracksList.append(pleer_query(track))
         
-
     lv = downwin["downloadlist"]
     lv.items = tracksList
-        # gui.Gauge(name='gauge', height='18', left='13', top='130', width='50', value=50, )
-
 
 def pleer_query(track):
     keywords = mainwin['artistslist'].get_selected_items()[0]["artist"] + " " + track["recording"]["title"]
@@ -95,6 +96,13 @@ def pleer_query(track):
     else:
         # TODO: Do another search for the track
         return [track["number"], track["recording"]["title"], "×".decode('utf-8'), ""]
+
+def download_all_songs(self):
+    downwin = gui.get("downwin")
+    for track in downwin["downloadlist"].items:
+        if (track["id"] != ""):
+            print "downloading..."
+
 
 
 def load(evt):
@@ -114,7 +122,9 @@ down_input_width = '260px'
 down_btn_width = '120px'
 down_btn_left = '380px'
 
-down_lv_songs_height = '355px'
+down_lv_songs_height = '335px'
+down_gauge_top = '380px'
+down_gauge_height = '20px'
 
 #mainwin
 main_win_height = '500px'
