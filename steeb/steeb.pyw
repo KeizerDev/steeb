@@ -7,11 +7,10 @@ __author__ = "KeizerDev (robertjankeizer@gmail.com)"
 __copyright__ = "Copyright (C) 2015- KeizerDev"
 __license__ = "LGPL 3.0"
 
-import gui, requests, sys, os, argparse, time
+import gui, requests, sys, os, argparse, time, urllib2
 import preference as pref
 import musicbrainzngs as m
 from clint.textui import colored, puts, progress, indent
-from mutagen.mp3 import EasyMP3
 
 # --- here goes your event handlers ---
 def search_artist(evt):
@@ -45,7 +44,6 @@ def get_tracks(evt):
     print(albumslist)
     print("=========================")
     print("=========================")
-    print(albumslist['release-group']['release-list'][-1]['id'])
     tracks = m.get_release_by_id(albumslist['release-group']['release-list'][0]['id'], includes=["artists", "recordings"])
     
     album_id = tracks["release"]["id"]
@@ -68,7 +66,7 @@ def clickevt_album(evt):
             gui.ListColumn(name='tracks', text='Tracks', width=300)
             gui.ListColumn(name='tracksfound', text='Tracks founded', width=150)
             gui.ListColumn(name='id', text='', width=0)
-        gui.Gauge(name='loader', height=down_gauge_height, left=0, top=down_gauge_top, width=down_win_width, value=50, )
+        gui.Gauge(name='progressbar', height=down_gauge_height, left=0, top=down_gauge_top, width=down_win_width, value=0, )
 
     downwin = gui.get("downwin")
     downwin['btn_down_all'].onclick = download_all_songs
@@ -87,7 +85,7 @@ def clickevt_album(evt):
 
 def pleer_query(track):
     keywords = mainwin['artistslist'].get_selected_items()[0]["artist"] + " " + track["recording"]["title"]
-    pleer_qry = requests.get("http://pleer.com/browser-extension/search?q=" + keywords)
+    pleer_qry = requests.get("http://pleer.com/browser-extension/search?q=%s" % keywords)
     pleer_tracks = pleer_qry.json()['tracks']
 
     print(pleer_tracks)
@@ -97,13 +95,42 @@ def pleer_query(track):
         # TODO: Do another search for the track
         return [track["number"], track["recording"]["title"], "×".decode('utf-8'), ""]
 
+
 def download_all_songs(self):
     downwin = gui.get("downwin")
     for track in downwin["downloadlist"].items:
         if (track["id"] != ""):
-            print "downloading..."
+            song_url = "http://pleer.com/browser-extension/files/%s.mp3" % track["id"]
+            song_title = "%s - %s" % (mainwin['artistslist'].get_selected_items()[0]["artist"], track["tracks"]) 
+            download(song_url, song_title)
 
+def download(fileurl, file_name):
+    downwin = gui.get("downwin")
+    downwin['progressbar'].value = 0 
 
+    u = urllib2.urlopen(fileurl)
+    f = open(pref.download_dir + file_name, 'wb')
+    meta = u.info()
+    file_size = int(meta.getheaders("Content-Length")[0])
+
+    print "Downloading: %s Bytes: %s" % (file_name, file_size)
+
+    file_size_dl = 0
+    block_sz = 8192
+    while True:
+        buffer = u.read(block_sz)
+        if not buffer:
+            break
+
+        file_size_dl += len(buffer)
+        f.write(buffer)
+        status = r"%10d  [%3.2f%%]" % (file_size_dl, file_size_dl * 100. / file_size)
+        downwin['progressbar'].value = int(round(file_size_dl * 100. / file_size))
+        # downwin["progressbar"].value = int(round(file_size_dl * 100. / file_size))
+        status = status + chr(8)*(len(status)+1)
+        print status,
+
+    f.close()
 
 def load(evt):
     m.set_useragent("steeb", "0.1", "KeizerDev@github.com")

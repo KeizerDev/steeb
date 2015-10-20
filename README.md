@@ -6,7 +6,8 @@ TODO:
 - [x] Get all the tracks of an album
 - [x] Loop through the tracks and search on pleer for it
 - [x] Set download locations
-- [ ] Download all the tracks one by one
+- [x] Download all the tracks one by one
+- [ ] Make progress bar work
 - [ ] Reorganize code
 - [ ] By pleer search make sure length match by song for better matches.
 - [ ] Force 320kbs option
