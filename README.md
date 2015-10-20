@@ -1,7 +1,7 @@
 #steeb
 steeb is a way to download music based on the search of an album and artist
 
-![demogif](https://raw.githubusercontent.com/KeizerDev/steeb/master/demo.gif)
+![demogif](http://i.imgur.com/bulRcP1.gifv)
 
 
 
