@@ -1,6 +1,11 @@
 #steeb
 steeb is a way to download music based on the search of an album and artist
 
+![demogif](https://raw.githubusercontent.com/KeizerDev/steeb/master/demo.gif)
+
+
+
+
 TODO:
 - [x] Make a search on musicbrainz
 - [x] Get all the tracks of an album
