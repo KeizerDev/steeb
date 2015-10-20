@@ -1,8 +1,12 @@
 #steeb
 steeb is a way to download music based on the search of an album and artist
 
+**Demo:**  
 [Click here for a demo gif](http://i.imgur.com/bulRcP1.gif)
 
+
+**How does it work?**  
+Steeb searches the musicbrainz library for the tracklists of your chosen artist and thereafter it does single queries to third party music services to get the mp3 files you want. Awesome, right?  
 
 TODO:
 - [x] Make a search on musicbrainz
