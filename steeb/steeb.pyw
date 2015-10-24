@@ -90,6 +90,7 @@ def pleer_query(track):
 
     print(pleer_tracks)
     if len(pleer_tracks) > 0:
+        # Create something like a magically selection algorithm
         return [track["number"], track["recording"]["title"], "✓".decode('utf-8'), pleer_tracks[0]["id"]]
     else:
         # TODO: Do another search for the track
@@ -102,11 +103,10 @@ def download_all_songs(self):
         if (track["id"] != ""):
             song_url = "http://pleer.com/browser-extension/files/%s.mp3" % track["id"]
             song_title = "%s - %s" % (mainwin['artistslist'].get_selected_items()[0]["artist"], track["tracks"]) 
-            download(song_url, song_title)
+            download(downwin, song_url, song_title)
 
-def download(fileurl, file_name):
-    downwin = gui.get("downwin")
-    downwin['progressbar'].value = 0 
+def download(downwin, fileurl, file_name):
+    downwin['progressbar'].value = 30 
 
     u = urllib2.urlopen(fileurl)
     f = open(pref.download_dir + file_name, 'wb')
