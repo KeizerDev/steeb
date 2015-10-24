@@ -109,7 +109,9 @@ def download(downwin, fileurl, file_name):
     downwin['progressbar'].value = 30 
 
     u = urllib2.urlopen(fileurl)
-    f = open(pref.download_dir + file_name, 'wb')
+    if not os.path.exists(pref.download_dir):
+        os.makedirs(pref.download_dir)
+    f = open(os.path.join(pref.download_dir, file_name + ".mp3"), 'wb')
     meta = u.info()
     file_size = int(meta.getheaders("Content-Length")[0])
 
