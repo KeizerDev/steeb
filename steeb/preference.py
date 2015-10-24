@@ -1,4 +1,4 @@
-import getpass
+import os.path
 
-download_dir = "/home/" + getpass.getuser() + "/Music/Downloads/" 
+download_dir = os.path.join(os.path.expanduser("~"), os.path.join("Downloads", "Music"))
 force_hq = False #TODO: implement
