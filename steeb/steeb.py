@@ -10,6 +10,7 @@ __license__ = "LGPL 3.0"
 import gui, requests, sys, os, argparse, time, urllib2
 import preference as pref
 import musicbrainzngs as m
+import helpers.pleer as pleer
 from clint.textui import colored, puts, progress, indent
 
 # --- here goes your event handlers ---
@@ -70,6 +71,9 @@ def clickevt_album(evt):
 
     downwin = gui.get("downwin")
     downwin['btn_down_all'].onclick = download_all_songs
+    plr = pleer.Pleer()
+    # print(pleer.Pleer())
+
 
     tracksList = []
     (oldtracks_position, oldtracks_json) = mainwin["trackslist"].items()[0]
@@ -78,23 +82,11 @@ def clickevt_album(evt):
     print(tracks)
     for idx, track in enumerate(tracks["release"]["medium-list"][0]["track-list"]):
         print(idx)
-        tracksList.append(pleer_query(track))
+
+        tracksList.append(plr.search(mainwin['artistslist'].get_selected_items()[0]["artist"] + " " + track["recording"]["title"], track))
         
     lv = downwin["downloadlist"]
     lv.items = tracksList
-
-def pleer_query(track):
-    keywords = mainwin['artistslist'].get_selected_items()[0]["artist"] + " " + track["recording"]["title"]
-    pleer_qry = requests.get("http://pleer.com/browser-extension/search?q=%s" % keywords)
-    pleer_tracks = pleer_qry.json()['tracks']
-
-    print(pleer_tracks)
-    if len(pleer_tracks) > 0:
-        # Create something like a magically selection algorithm
-        return [track["number"], track["recording"]["title"], "✓".decode('utf-8'), pleer_tracks[0]["id"]]
-    else:
-        # TODO: Do another search for the track
-        return [track["number"], track["recording"]["title"], "×".decode('utf-8'), ""]
 
 
 def download_all_songs(self):
