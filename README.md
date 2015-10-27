@@ -11,7 +11,7 @@ Steeb searches the musicbrainz library for the tracklists of your chosen artist 
 TODO:
 - [x] Make a search on musicbrainz
 - [x] Get all the tracks of an album
-- [x] Loop through the tracks and search on pleer for it
+- [x] Loop through the tracks and search on various online music sources for it
 - [x] Set download locations
 - [x] Download all the tracks one by one
 - [ ] Make progress bar work
