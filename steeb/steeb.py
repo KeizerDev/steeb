@@ -65,7 +65,7 @@ def clickevt_album(evt):
         with gui.ListView(name='downloadlist', height=down_lv_songs_height, width=down_win_width, left='0', top=form_height, item_count=10, sort_column=0, onitemselected="print ('sel %s' % event.target.get_selected_items())", ):
             gui.ListColumn(name='trackposition', text='Nr.', width=50)
             gui.ListColumn(name='tracks', text='Tracks', width=300)
-            gui.ListColumn(name='tracksfound', text='Tracks founded', width=150)
+            gui.ListColumn(name='tracksfound', text='Tracks found', width=150)
             gui.ListColumn(name='id', text='', width=0)
         gui.Gauge(name='progressbar', height=down_gauge_height, left=0, top=down_gauge_top, width=down_win_width, value=0, )
 
