@@ -103,28 +103,33 @@ def download(downwin, fileurl, file_name):
     u = urllib2.urlopen(fileurl)
     if not os.path.exists(pref.download_dir):
         os.makedirs(pref.download_dir)
-    f = open(os.path.join(pref.download_dir, file_name + ".mp3"), 'wb')
-    meta = u.info()
-    file_size = int(meta.getheaders("Content-Length")[0])
 
-    print "Downloading: %s Bytes: %s" % (file_name, file_size)
+    if not os.path.exists(pref.download_dir + "/" + file_name + ".mp3"):
 
-    file_size_dl = 0
-    block_sz = 8192
-    while True:
-        buffer = u.read(block_sz)
-        if not buffer:
-            break
+        f = open(os.path.join(pref.download_dir, file_name + ".mp3"), 'wb')
+        meta = u.info()
+        file_size = int(meta.getheaders("Content-Length")[0])
 
-        file_size_dl += len(buffer)
-        f.write(buffer)
-        status = r"%10d  [%3.2f%%]" % (file_size_dl, file_size_dl * 100. / file_size)
-        downwin['progressbar'].value = int(round(file_size_dl * 100. / file_size))
-        # downwin["progressbar"].value = int(round(file_size_dl * 100. / file_size))
-        status = status + chr(8)*(len(status)+1)
-        print status,
+        print "Downloading: %s Bytes: %s" % (file_name, file_size)
 
-    f.close()
+        file_size_dl = 0
+        block_sz = 8192
+        while True:
+            buffer = u.read(block_sz)
+            if not buffer:
+                break
+
+            file_size_dl += len(buffer)
+            f.write(buffer)
+            status = r"%10d  [%3.2f%%]" % (file_size_dl, file_size_dl * 100. / file_size)
+            downwin['progressbar'].value = int(round(file_size_dl * 100. / file_size))
+            # downwin["progressbar"].value = int(round(file_size_dl * 100. / file_size))
+            status = status + chr(8)*(len(status)+1)
+            print status,
+
+        f.close()
+    else:
+        print ("File " + file_name + " already downloaded")
 
 def load(evt):
     m.set_useragent("steeb", "0.1", "KeizerDev@github.com")
