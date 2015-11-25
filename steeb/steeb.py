@@ -7,10 +7,11 @@ __author__ = "KeizerDev (robertjankeizer@gmail.com)"
 __copyright__ = "Copyright (C) 2015- KeizerDev"
 __license__ = "LGPL 3.0"
 
-import requests, sys, os, argparse, time, urllib2, Tkinter
+import requests, sys, os, argparse, time, urllib2
 import preference as pref
 import musicbrainzngs as m
 import helpers.pleer as pleer
+from Tkinter import *
 from clint.textui import colored, puts, progress, indent
 
 # --- here goes your event handlers ---
@@ -170,8 +171,14 @@ lv_artist_top = '280px'
 btn_download_width = '100px'
 form_height = '45px'
 
+root = Tk()
 
-top = Tkinter.Tk()
+root.geometry("500x600")
+root.resizable(width=FALSE, height=FALSE)
+for r in range(3):
+    for c in range(5):
+        Label(root, text='R%s/C%s'%(r,c),borderwidth=1 ).grid(row=r,column=c)
+
 # with gui.Window(name='mainwin', title=u'Steeb', height=main_win_height, width=main_win_width, left='323', top='137', bgcolor=u'#F0F0F0', fgcolor=u'#555555', image='', ):
 #     gui.TextBox(name='searchfield', height=form_height, left='5', top='0', width=main_input_width, parent='mainwin', )
 #     gui.Button(label=u'Crawl songs!', name='button_down', height='35px', width=btn_download_width, left=main_search_width, top='5', default=True, fgcolor=u'#EEEEEE', bgcolor=u'#C0392B', parent='mainwin', )
@@ -194,4 +201,4 @@ top = Tkinter.Tk()
 # mainwin.onload = load
 
 if __name__ == "__main__":
-    top.mainloop()
+    root.mainloop()
