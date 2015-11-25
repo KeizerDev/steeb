@@ -171,27 +171,27 @@ btn_download_width = '100px'
 form_height = '45px'
 
 
-with gui.Window(name='mainwin', title=u'Steeb', height=main_win_height, width=main_win_width, left='323', top='137', bgcolor=u'#F0F0F0', fgcolor=u'#555555', image='', ):
-    gui.TextBox(name='searchfield', height=form_height, left='5', top='0', width=main_input_width, parent='mainwin', )
-    gui.Button(label=u'Crawl songs!', name='button_down', height='35px', width=btn_download_width, left=main_search_width, top='5', default=True, fgcolor=u'#EEEEEE', bgcolor=u'#C0392B', parent='mainwin', )
-    gui.Button(label=u'Search!', name='button_search', height='35px', width=main_btn_width, left='333px', top='5', default=True, fgcolor=u'#EEEEEE', bgcolor=u'#C0392B', parent='mainwin', )
-    with gui.ListView(name='artistslist', height=lv_artist_height, left='0', top=form_height, width=main_search_width, item_count=10, sort_column=0, onitemselected="print ('sel %s' % event.target.get_selected_items())", ):
-        gui.ListColumn(name='artist', text='Artist', width=400)
-        gui.ListColumn(name='id', text='Id', width=0)
-    with gui.ListView(name='albumslist', height=lv_albums_height, left='0', top=lv_artist_top, width=main_search_width, item_count=10, sort_column=0, onitemselected="print ('sel %s' % event.target.get_selected_items())", ):
-        gui.ListColumn(name='albums', text='Albums', width=400)
-        gui.ListColumn(name='id', text='Id', width=0)
-    with gui.ListView(name='trackslist', height=lv_songs_height, left=main_search_width, top=form_height, width=main_songs_width, item_count=10, sort_column=0, onitemselected="print ('sel %s' % event.target.get_selected_items())", ):
-        gui.ListColumn(name='songs', text='Songs', width=200)
-        gui.ListColumn(name='id', text='Id', width=0, )
-        # gui.Gauge(name='gauge', height='18', left='13', top='130', width='50', value=50, )
+top = Tkinter.Tk()
+# with gui.Window(name='mainwin', title=u'Steeb', height=main_win_height, width=main_win_width, left='323', top='137', bgcolor=u'#F0F0F0', fgcolor=u'#555555', image='', ):
+#     gui.TextBox(name='searchfield', height=form_height, left='5', top='0', width=main_input_width, parent='mainwin', )
+#     gui.Button(label=u'Crawl songs!', name='button_down', height='35px', width=btn_download_width, left=main_search_width, top='5', default=True, fgcolor=u'#EEEEEE', bgcolor=u'#C0392B', parent='mainwin', )
+#     gui.Button(label=u'Search!', name='button_search', height='35px', width=main_btn_width, left='333px', top='5', default=True, fgcolor=u'#EEEEEE', bgcolor=u'#C0392B', parent='mainwin', )
+#     with gui.ListView(name='artistslist', height=lv_artist_height, left='0', top=form_height, width=main_search_width, item_count=10, sort_column=0, onitemselected="print ('sel %s' % event.target.get_selected_items())", ):
+#         gui.ListColumn(name='artist', text='Artist', width=400)
+#         gui.ListColumn(name='id', text='Id', width=0)
+#     with gui.ListView(name='albumslist', height=lv_albums_height, left='0', top=lv_artist_top, width=main_search_width, item_count=10, sort_column=0, onitemselected="print ('sel %s' % event.target.get_selected_items())", ):
+#         gui.ListColumn(name='albums', text='Albums', width=400)
+#         gui.ListColumn(name='id', text='Id', width=0)
+#     with gui.ListView(name='trackslist', height=lv_songs_height, left=main_search_width, top=form_height, width=main_songs_width, item_count=10, sort_column=0, onitemselected="print ('sel %s' % event.target.get_selected_items())", ):
+#         gui.ListColumn(name='songs', text='Songs', width=200)
+#         gui.ListColumn(name='id', text='Id', width=0, )
+#         # gui.Gauge(name='gauge', height='18', left='13', top='130', width='50', value=50, )
+    # Code to add widgets will go here...
 
 
+# mainwin = gui.get("mainwin")
 
-mainwin = gui.get("mainwin")
-
-mainwin.onload = load
+# mainwin.onload = load
 
 if __name__ == "__main__":
-    mainwin.show()
-    gui.main_loop()
+    top.mainloop()
