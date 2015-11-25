@@ -7,7 +7,7 @@ __author__ = "KeizerDev (robertjankeizer@gmail.com)"
 __copyright__ = "Copyright (C) 2015- KeizerDev"
 __license__ = "LGPL 3.0"
 
-import gui, requests, sys, os, argparse, time, urllib2
+import requests, sys, os, argparse, time, urllib2, Tkinter
 import preference as pref
 import musicbrainzngs as m
 import helpers.pleer as pleer
@@ -38,7 +38,7 @@ def get_albums(evt):
 
 def get_tracks(evt):
     albumslist = m.get_release_group_by_id(evt.target.get_selected_items()[0]['id'], includes="releases")
-    resultList = [] 
+    resultList = []
 
     print("=========================")
     print("=========================")
@@ -46,14 +46,14 @@ def get_tracks(evt):
     print("=========================")
     print("=========================")
     tracks = m.get_release_by_id(albumslist['release-group']['release-list'][0]['id'], includes=["artists", "recordings"])
-    
+
     album_id = tracks["release"]["id"]
     for idx, track in enumerate(tracks["release"]["medium-list"][0]["track-list"]):
         resultList.append([track["recording"]["title"], album_id])
 
     lv = mainwin['trackslist']
     lv.items = resultList
-    
+
 
 def clickevt_album(evt):
     window_name = mainwin['artistslist'].get_selected_items()[0]["artist"] + " - " + mainwin['albumslist'].get_selected_items()[0]["albums"];
@@ -84,7 +84,7 @@ def clickevt_album(evt):
         print(idx)
 
         tracksList.append(plr.search(mainwin['artistslist'].get_selected_items()[0]["artist"] + " " + track["recording"]["title"], track))
-        
+
     lv = downwin["downloadlist"]
     lv.items = tracksList
 
@@ -94,11 +94,11 @@ def download_all_songs(self):
     for track in downwin["downloadlist"].items:
         if (track["id"] != ""):
             song_url = "http://pleer.com/browser-extension/files/%s.mp3" % track["id"]
-            song_title = "%s - %s" % (mainwin['artistslist'].get_selected_items()[0]["artist"], track["tracks"]) 
+            song_title = "%s - %s" % (mainwin['artistslist'].get_selected_items()[0]["artist"], track["tracks"])
             download(downwin, song_url, song_title)
 
 def download(downwin, fileurl, file_name):
-    downwin['progressbar'].value = 30 
+    downwin['progressbar'].value = 30
 
     u = urllib2.urlopen(fileurl)
     if not os.path.exists(pref.download_dir):
@@ -183,15 +183,15 @@ with gui.Window(name='mainwin', title=u'Steeb', height=main_win_height, width=ma
         gui.ListColumn(name='id', text='Id', width=0)
     with gui.ListView(name='trackslist', height=lv_songs_height, left=main_search_width, top=form_height, width=main_songs_width, item_count=10, sort_column=0, onitemselected="print ('sel %s' % event.target.get_selected_items())", ):
         gui.ListColumn(name='songs', text='Songs', width=200)
-        gui.ListColumn(name='id', text='Id', width=0, ) 
+        gui.ListColumn(name='id', text='Id', width=0, )
         # gui.Gauge(name='gauge', height='18', left='13', top='130', width='50', value=50, )
 
 
-   
+
 mainwin = gui.get("mainwin")
 
 mainwin.onload = load
 
 if __name__ == "__main__":
-    mainwin.show()    
+    mainwin.show()
     gui.main_loop()
